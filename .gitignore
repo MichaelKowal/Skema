@@ -1,0 +1,8 @@
+skema_venv/*
+.idea
+*.egg-info/
+*.pex
+*.pyc
+__pycache__/
+instance?
+.pytest_cache/
