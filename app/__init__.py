@@ -7,3 +7,4 @@ def create_app():
     app.register_blueprint(views)
 
     return app
+#add any comment
