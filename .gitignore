@@ -7,3 +7,9 @@ __pycache__/
 instance/*
 .pytest_cache/
 .DS_Store
+
+
+#Exclude venv folder
+venv/*
+
+
