@@ -40,7 +40,7 @@ data set.
 '''
 
 
-def fill_db(file):
+def fill_db(semester, file):
     from pandas.compat import FileNotFoundError
     try:
         df = pandas.read_csv(file)
@@ -81,52 +81,93 @@ def fill_db(file):
     df = df.drop(['start_date', 'end_date', 'day', 'start_time', 'duration','pattern_day', 'pattern_start_time',
                   'pattern_duration', 'building_id', 'date', ], 1)
     conn = sqlite3.connect('instance/skemaDB.sqlite')
-    df.to_sql('winter2017', conn, if_exists='replace')
+    df.to_sql(semester, conn, if_exists='replace')
     conn.commit()
+    print('database updated!')
 
 
-def get_events():
+def get_events(semester):
     db = get_db()
     cursor = db.cursor()
-    statement = 'SELECT * FROM winter2017'
+    statement = 'SELECT * FROM ' + semester
     data = cursor.execute(statement).fetchall()
     classes = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
     return str(json.dumps(({'classes': classes})))
 
 
-def get_classes(subject, prof, years):
+def get_classes(semester, subject, prof, years):
     db = get_db()
     cursor = db.cursor()
+    if subject == 'Subject':
+        subject = '____'
+    if prof == "Instructor":
+        prof = '%'
     if len(years) == 1:
-        statement = 'SELECT * FROM winter2017 WHERE ' \
+        statement = 'SELECT * FROM ' + semester+ ' WHERE ' \
                     'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\''
     elif len(years) == 2:
-        statement = 'SELECT * FROM winter2017 WHERE ' \
+        statement = 'SELECT * FROM ' + semester + ' WHERE ' \
                         'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\''
     elif len(years) == 3:
-        statement = 'SELECT * FROM winter2017 WHERE ' \
+        statement = 'SELECT * FROM ' + semester + ' WHERE ' \
                         'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\''
     elif len(years) == 4:
-        statement = 'SELECT * FROM winter2017 WHERE ' \
+        statement = 'SELECT * FROM ' + semester + ' WHERE ' \
                         'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\''
+    elif len(years) == 4:
+        statement = 'SELECT * FROM ' + semester + ' WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\''
+    elif len(years) == 4:
+        statement = 'SELECT * FROM ' + semester + ' WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\''
+    elif len(years) == 4:
+        statement = 'SELECT * FROM ' + semester + ' WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[6]) + '%\''
     else:
-        statement = 'SELECT * FROM winter2017 WHERE title LIKE \'' + subject \
+        statement = 'SELECT * FROM ' + semester + ' WHERE title LIKE \'' + subject \
                     + '%\' AND professor LIKE \'' + prof + '\''
     data = cursor.execute(statement).fetchall()
     classes = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
     return str(json.dumps(({'classes': classes})))
 
 
-def get_profs():
+def get_profs(semester):
     db = get_db()
     cursor = db.cursor()
-    statement = 'SELECT DISTINCT professor FROM winter2017 ORDER BY professor'
+    statement = 'SELECT DISTINCT professor FROM ' + semester + ' ORDER BY professor'
+    rows = cursor.execute(statement).fetchall()
+    lst = []
+    for row in rows:
+        if sum(1 for c in row[0] if c.isupper()) < 4 and row[0] != '':
+            lst.append(row[0])
+    return lst
+
+
+def get_subject(semester):
+    db = get_db()
+    cursor = db.cursor()
+    statement = 'SELECT DISTINCT (SUBSTR(title, 0, 5)) FROM ' + semester
     rows = cursor.execute(statement).fetchall()
     lst = []
     for row in rows:
@@ -134,11 +175,10 @@ def get_profs():
     return lst
 
 
-def get_subject():
+def get_semesters():
     db = get_db()
     cursor = db.cursor()
-    statement = 'SELECT DISTINCT (SUBSTR(title, 0, 5)) FROM winter2017'
-    rows = cursor.execute(statement).fetchall()
+    rows = cursor.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
     lst = []
     for row in rows:
         lst.append(row[0])
@@ -155,9 +195,10 @@ fills the database with a file from the given path.Will throw an error if the fi
 
 @click.command('fill_db')
 @click.argument('file')
+@click.argument('semester')
 @with_appcontext
-def fill_db_command(file):
-    fill_db(file)
+def fill_db_command(semester, file):
+    fill_db(semester, file)
     event = 'Database filled with ' + file
     log.add_event(event)
     click.echo(event)

@@ -1,0 +1,46 @@
+<!--Stylesheets-->
+<!-- Bootstrap CSS CDN-->
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
+<!-- Custom CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style-ext.css') }}">
+
+<script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+<!--Favicon -->
+<link rel="shortcut icon" href="{{ url_for('static', filename='media/skema-favicon.png') }}">
+
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="loginForms">
+    <form method=post enctype=multipart/form-data action="{{ url_for('views.upload') }}">
+    <div class="drop-down-nav">
+        <div class="form-group">
+            <label for="semesterSelect">Semester</label>
+            <select class="form-control" id="semesterSelect" name="semester">
+                <option>Winter</option>
+                <option>Summer</option>
+                <option>Fall</option>
+            </select>
+        </div>
+    </div>
+    <!-- Year Selection -->
+    <div class="drop-down-nav">
+        <div class="form-group">
+            <label for="yearSelect">Year</label>
+            <select class="form-control" id="yearSelect" name="year">
+                {% for i in range(1994, 2101) %}
+                <option>{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <input type=file name=file>
+        <button type=submit value=Upload class="btn btn-outline-secondary">Submit</button>
+</form>
+    </div>
+{% endblock %}

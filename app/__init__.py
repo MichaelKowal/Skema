@@ -26,6 +26,9 @@ def create_app(test_config=None):
     from .views import views
     app.register_blueprint(views)
 
+    from app import auth
+    app.register_blueprint(auth.bp)
+
     from . import database
     database.init_app(app)
 
