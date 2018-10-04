@@ -33,6 +33,9 @@ def init_database():
     with current_app.open_resource('schema.sql') as f:
         database.executescript(f.read().decode('utf8'))
 
+# initialize the database by running "flask init_database" in
+# the venv.  It will create a new skemaDB.sqlite file in
+# the instance folder
 @click.command('init_database')
 @with_appcontext
 def init_database_command():
