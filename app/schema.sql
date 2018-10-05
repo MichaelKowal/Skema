@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS classes;
+DROP TABLE IF EXISTS schedules;
 
 CREATE TABLE schedules (
   crn INT PRIMARY KEY,
