@@ -73,11 +73,11 @@ def fetch_database_command(field):
 # Will throw an error if the file passed is not in
 # the correct format.
 @click.command('fill_database')
-@click.argument('filePath')
+@click.argument('file')
 @with_appcontext
-def fill_database_command(filePath):
+def fill_database_command(file):
     from . import parser
-    parser.parse(filePath)
+    parser.parse(file)
 
 # drops the table from the database, removing everything
 # in it.
