@@ -2,140 +2,252 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>Skema</title>
+    <title>Skema</title>
 
-  <!--Citations -->
-  <!-- 1.) Sidebar Code Source from: https://bootstrapious.com/p/bootstrap-sidebar on Sept, 19, 2018 -->
+    <!--Citations -->
+    <!-- 1.) Sidebar Code Source from: https://bootstrapious.com/p/bootstrap-sidebar on Sept, 19, 2018 -->
 
 
-  <!-- Bootstrap CSS CDN -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
 
-  <!-- For search Bar-->
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
 </head>
 
 <body>
 
 
-
-  <div class="wrapper">
-    <!-- Sidebar Holder -->
+<div class="wrapper">
+    <!-- Sidebar Navigation -->
     <nav id="sidebar">
-      <div class="sidebar-header">
-        <h1>SKEMA</h1>
-      </div>
-
-      <ul class="list-unstyled components">
-        <li class="active">
-          <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Saved</a>
-          <ul class="collapse list-unstyled" id="homeSubmenu">
-            <li><a href="#">Calendar 1</a></li>
-            <li><a href="#">Calendar 2</a></li>
-            <li><a href="#">Calendar 3</a></li>
-          </ul>
-        </li>
-        <li>
-          <p>Create Calendar</p>
-        </li>
-        <li>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Department Lookup" aria-label="Recipient's username" aria-describedby="button-addon2">
-          </div>
-        </li>
-        <li>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-            <label class="form-check-label" for="defaultCheck1">
-    100 Level
-  </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-            <label class="form-check-label" for="defaultCheck2">
-    200 Level
-  </label>
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-            <label class="form-check-label" for="defaultCheck2">
-  300 Level
-</label>
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-            <label class="form-check-label" for="defaultCheck2">
-  400 Level
-</label>
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-            <label class="form-check-label" for="defaultCheck2">
-  Upper Level
-</label>
-          </div>
-        </li>
-        <li>
-          <div class="button-search">
-          <button type="button" id="search-button" class="btn btn-dark">Search Courses</button>
+        <div class="sidebar-header">
+            <h1>SKEMA</h1>
         </div>
-        </li>
-      </ul>
+
+        <ul class="list-unstyled components">
+
+            <!-- Title -->
+
+            <li>
+                <p>Create Calendar</p>
+            </li>
+
+            <!-- Subject Selection -->
+            <!-- Some of this can be cleaned up with Jinja Templates-->
+
+            <li>
+                <div class="drop-down-nav">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Subject</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <default>Subject</default>
+                            <option>Computer Science</option>
+                            <option>Anthropology</option>
+                            <option>Psychology</option>
+                            <option>Cd-Rom</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Instructor Selection -->
+            <li>
+                <div class="drop-down-nav">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Instructor</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <default>Instructor</default>
+                            <option>Prof 1</option>
+                            <option>Prof 2</option>
+                            <option>Prof 3</option>
+                            <option>Prof 4</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Term Selection -->
+
+            <li>
+                <div class="drop-down-nav">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Term</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <default>Term</default>
+                            <option>Fall</option>
+                            <option>Winter</option>
+                            <option>Spring</option>
+                            <option>Summer</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Year Selection -->
+            <li>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    100 Level
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    200 Level
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    300 Level
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    400 Level
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    Other
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+
+            <!-- File Upload -->
+            <li>
+                <form>
+                    <div class="drop-down-nav">
+                        <div class="form-group">
+                            <label for="exampleFormControlFile1"></label>
+                            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        </div>
+                    </div>
+                </form>
+            </li>
+
+            <li>
+                <div class="button-search">
+                    <button type="button" id="search-button" class="btn btn-outline-light">Search Courses</button>
+                </div>
+            </li>
+        </ul>
     </nav>
+
 
     <!-- Page Content Holder -->
     <div id="content">
 
-      <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default">
 
 
-        <div class="navbar-header">
-          <button type="button" id="sidebarCollapse" class="btn btn-dark">
-                                <i class="glyphicon glyphicon-align-left"></i>
-                                <span>Toggle Menu</span>
-                            </button>
+            <div class="navbar-header">
+                <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                    <i class="static/incons/si-glyph-adjustment-horizon.svg"></i>
+                    <span>Toggle Menu</span>
+                </button>
+            </div>
+        </nav>
+
+
+        <!--Calendar Table -->
+        <!--This is just filler - we'll have to come up with something more creative to parse a .csv into a table-->
+        <!--I think this is the solution:   http://christopheviau.com/d3_tutorial/      -->
+        <div class="container">
+
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Sunday</th>
+                    <th scope="col">Monday</th>
+                    <th scope="col">Tuesday</th>
+                    <th scope="col">Wednesday</th>
+                    <th scope="col">Thursday</th>
+                    <th scope="col">Friday</th>
+                    <th scope="col">Saturday</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">8AM</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>Mark</td>
+                </tr>
+                <tr>
+                    <th scope="row">9AM</th>
+                   <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>Mark</td>
+                </tr>
+                <tr>
+                    <th scope="row">10AM</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>Mark</td>
+                </tr>
+                </tbody>
+            </table>
+
+
         </div>
-      </nav>
 
-
-      <!--Michael - insert your code here. -->
-      <h2>Insert Grid Here</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-        aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-        aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-      <div class="line"></div>
+        <div class="line"></div>
 
     </div>
-  </div>
+
+</div>
+
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script type="text/javascript" src="static/js/jquery-3.3.1.slim.js"></script>
+<!-- Popper.JS -->
+<script type="text/javascript" src="static/js/popper.js"></script>
+<!-- Bootstrap JS -->
+<script type="text/javascript" src="static/bootstrap-4/js/bootstrap.js"></script>
+
+<!--Small function to run the menu toggle-->
+<script src="static/js/nav-toggle.js"></script>
 
 
-
-
-
-  <!-- jQuery CDN -->
-  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-  <!-- Bootstrap Js CDN -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#sidebarCollapse').on('click', function() {
-        $('#sidebar').toggleClass('active');
-      });
-    });
-  </script>
 </body>
 
 </html>

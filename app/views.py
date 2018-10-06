@@ -7,8 +7,3 @@ def main_page():
     return render_template('skema.html')
 
 
-'''
-@views.route('/info', methods=['GET'])
-def info():
-    return render_template('info.html')
-'''
