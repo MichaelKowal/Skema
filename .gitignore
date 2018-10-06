@@ -6,3 +6,4 @@ skema_venv/*
 __pycache__/
 instance?
 .pytest_cache/
+.DS_Store
