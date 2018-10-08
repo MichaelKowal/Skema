@@ -20,12 +20,12 @@ def parse(file):
 # fills the database with an array that is passed with it
 def fill_database(file_contents_by_row):
 
-    #use this a placeholder for the crn
+    # use this a placeholder for the crn
     crn = 0
 
     db = get_database()
 
-    for x in file_contents_by_row[4:1231]:  # 1231 is the number of rows that got parsed into the array
+    for x in file_contents_by_row[4: ]:
         db.execute('''INSERT INTO schedules(crn, course_id, component_id, start_date, end_date, day, start_time, duration,
             pattern_day, pattern_start_time, pattern_duration, building_id, room_number, professor) VALUES(?,?,?,?,?,?,?,?,
             ?,?,?,?,?,?)''', (crn, x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8], x[9], x[10], x[11], x[12]))

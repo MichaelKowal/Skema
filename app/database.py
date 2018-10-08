@@ -7,6 +7,7 @@ upon session completion to close the database
 
 
 import sqlite3
+from . import log
 
 import click
 from flask import current_app, g
@@ -57,7 +58,9 @@ def fetch_database(field):
 @with_appcontext
 def init_database_command():
     init_database()
-    click.echo('Initialized the database')
+    event = 'Initialized the database'
+    log.add_event(event)
+    click.echo(event)
 
 # returns any column passed in as an argument.
 # For Example: 'flask fetch_database course_id'
@@ -66,7 +69,6 @@ def init_database_command():
 @click.argument('field')
 @with_appcontext
 def fetch_database_command(field):
-    click.echo('Data: \n')
     fetch_database(field)
 
 # fills the database with a file from the given path.
@@ -78,6 +80,8 @@ def fetch_database_command(field):
 def fill_database_command(file):
     from . import parser
     parser.parse(file)
+    event = 'Database filled'
+    log.add_event(event)
 
 # drops the table from the database, removing everything
 # in it.
@@ -85,7 +89,11 @@ def fill_database_command(file):
 @with_appcontext
 def destroy_database_command():
     destroy_database()
-    click.echo('Database destroyed')
+    event = 'Database destroyed'
+    log.add_event(event)
+    click.echo(event)
+
+
 
 # these are all commands that can be used in the virtual
 # environment.  Call them before calling flask run.
