@@ -6,6 +6,7 @@ The log file is used to track database manipulation and errors that happen
 behind the scenes.
 '''
 
+
 # adds an event to the log in the form:
 #
 # datetime
@@ -15,6 +16,7 @@ def add_event(event):
     log.write(str(datetime.datetime.now()) + '\n')
     log.write(str(event) + '\n\n')
     log.close()
+
 
 # deletes the log file.
 def rem_log():

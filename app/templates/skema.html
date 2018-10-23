@@ -5,23 +5,63 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="{{ url_for('static', filename='fullcalendar.min.css') }}" rel='stylesheet' />
+    <link href="{{ url_for('static', filename='fullcalendar.print.css') }}" rel='stylesheet' media='print' />
+    <script src="{{ url_for('static', filename='lib/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='fullcalendar.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+    <script>
 
+
+    </script>
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+            font-size: 14px;
+        }
+
+        #script-warning {
+            display: none;
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            padding: 0 10px;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: red;
+        }
+
+        #loading {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 10px;
+        }
+
+    </style>
     <title>Skema</title>
 
     <!--Citations -->
     <!-- 1.) Sidebar Code Source from: https://bootstrapious.com/p/bootstrap-sidebar on Sept, 19, 2018 -->
-
-
-    <!-- Bootstrap CSS CDN -->
+    <!-- Bootstrap CSS CDN-->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
-
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-
 </head>
 
-<body>
+<body onload="loadCalendar()">
 
 
 <div class="wrapper">
@@ -45,13 +85,12 @@
             <li>
                 <div class="drop-down-nav">
                     <div class="form-group">
-                        <label for="exampleFormControlSelect1">Subject</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
-                            <default>Subject</default>
-                            <option>Computer Science</option>
-                            <option>Anthropology</option>
-                            <option>Psychology</option>
-                            <option>Cd-Rom</option>
+                        <label for="subjectSelect">Subject</label>
+                        <select class="form-control" id="subjectSelect">
+                            <option>Subject</option>
+                            {% for subject in subjects %}
+                            <option>{{ subject }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -61,13 +100,12 @@
             <li>
                 <div class="drop-down-nav">
                     <div class="form-group">
-                        <label for="exampleFormControlSelect1">Instructor</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
-                            <default>Instructor</default>
-                            <option>Prof 1</option>
-                            <option>Prof 2</option>
-                            <option>Prof 3</option>
-                            <option>Prof 4</option>
+                        <label for="profSelect">Instructor</label>
+                        <select class="form-control" id="profSelect">
+                            <option>Instructor</option>
+                            {% for prof in profs %}
+                                <option>{{ prof }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -80,7 +118,7 @@
                     <div class="form-group">
                         <label for="exampleFormControlSelect1">Term</label>
                         <select class="form-control" id="exampleFormControlSelect1">
-                            <default>Term</default>
+                            <option>Term</option>
                             <option>Fall</option>
                             <option>Winter</option>
                             <option>Spring</option>
@@ -97,7 +135,7 @@
                     <div class="row">
                         <div class="col-sm">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                <input class="form-check-input" type="checkbox" value="" id="check100">
                                 <label class="form-check-label" for="defaultCheck1">
                                     100 Level
                                 </label>
@@ -105,7 +143,7 @@
                         </div>
                         <div class="col-sm">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                <input class="form-check-input" type="checkbox" value="" id="check200">
                                 <label class="form-check-label" for="defaultCheck1">
                                     200 Level
                                 </label>
@@ -113,7 +151,7 @@
                         </div>
                         <div class="col-sm">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
+                                <input class="form-check-input" type="checkbox" value="" id="check300">
                                 <label class="form-check-label" for="defaultCheck1">
                                     300 Level
                                 </label>
@@ -121,7 +159,7 @@
                         </div>
                         <div class="col-sm">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
+                                <input class="form-check-input" type="checkbox" value="" id="check400">
                                 <label class="form-check-label" for="defaultCheck1">
                                     400 Level
                                 </label>
@@ -129,32 +167,28 @@
                         </div>
                         <div class="col-sm">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
+                                <input class="form-check-input" type="checkbox" value="" id="checkOther">
                                 <label class="form-check-label" for="defaultCheck1">
                                     Other
                                 </label>
                             </div>
                         </div>
                     </div>
-
                 </div>
-            </li>
-
-            <!-- File Upload -->
-            <li>
-                <form>
-                    <div class="drop-down-nav">
-                        <div class="form-group">
-                            <label for="exampleFormControlFile1"></label>
-                            <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                        </div>
-                    </div>
-                </form>
             </li>
 
             <li>
                 <div class="button-search">
-                    <button type="button" id="search-button" class="btn btn-outline-light">Search Courses</button>
+                    <button type="button" id="search-button" class="btn btn-outline-light"
+                            onclick="loadDoc(document.getElementById('subjectSelect'),
+                            document.getElementById('profSelect'),
+                            document.getElementById('check100'),
+                            document.getElementById('check200'),
+                            document.getElementById('check300'),
+                            document.getElementById('check400'),
+                            document.getElementById('checkOther'))">
+                        Add Courses
+                    </button>
                 </div>
             </li>
         </ul>
@@ -166,87 +200,20 @@
 
         <nav class="navbar navbar-default">
 
-
-            <div class="navbar-header">
-                <button type="button" id="sidebarCollapse" class="btn btn-dark">
-                    <i class="static/incons/si-glyph-adjustment-horizon.svg"></i>
-                    <span>Toggle Menu</span>
-                </button>
-            </div>
         </nav>
 
-
+        <!--<div id="calendar" style="height: 800px;"></div>-->
         <!--Calendar Table -->
         <!--This is just filler - we'll have to come up with something more creative to parse a .csv into a table-->
         <!--I think this is the solution:   http://christopheviau.com/d3_tutorial/      -->
-        <div class="container">
-
-            <table class="table">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Sunday</th>
-                    <th scope="col">Monday</th>
-                    <th scope="col">Tuesday</th>
-                    <th scope="col">Wednesday</th>
-                    <th scope="col">Thursday</th>
-                    <th scope="col">Friday</th>
-                    <th scope="col">Saturday</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">8AM</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                </tr>
-                <tr>
-                    <th scope="row">9AM</th>
-                   <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                </tr>
-                <tr>
-                    <th scope="row">10AM</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                </tr>
-                </tbody>
-            </table>
-
-
-        </div>
-
-        <div class="line"></div>
-
+        <div id='script-warning'>
+		Error getting data from <code>/data</code> endpoint.
+	    </div>
+        <div id="loading">loading...</div>
+        <div id='calendar'></div>
     </div>
 
 </div>
-
-<!-- jQuery CDN - Slim version (=without AJAX) -->
-<script type="text/javascript" src="static/js/jquery-3.3.1.slim.js"></script>
-<!-- Popper.JS -->
-<script type="text/javascript" src="static/js/popper.js"></script>
-<!-- Bootstrap JS -->
-<script type="text/javascript" src="static/bootstrap-4/js/bootstrap.js"></script>
-
-<!--Small function to run the menu toggle-->
-<script src="static/js/nav-toggle.js"></script>
-
 
 </body>
 
