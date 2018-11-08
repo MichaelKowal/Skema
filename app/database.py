@@ -8,12 +8,14 @@ upon session completion to close the database
 
 import sqlite3
 from . import log
-
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
+import pandas
+import json
 
-def get_database():
+
+def get_db():
     if 'database' not in g:
         g.database = sqlite3.connect(
                 current_app.config['DATABASE'],
@@ -23,83 +25,150 @@ def get_database():
 
     return g.database
 
-def close_database(e=None):
-    database = g.pop('database', None)
 
-    if database is not None:
-        database.close()
+def close_db(e=None):
+    db = g.pop('database', None)
 
-# adds the schedules table to the database.  If a table called
-# schedules already exists, it is destroyed and a new one is
-# created
-def init_database():
-    database = get_database()
-    with current_app.open_resource('schema.sql') as f:
-        database.executescript(f.read().decode('utf8'))
+    if db is not None:
+        db.close()
 
-# removes the 'schedules' table from the database
-def destroy_database():
-    db = get_database()
-    db.execute('''DROP TABLE IF EXISTS schedules''')
 
-# prints the requested column
-def fetch_database(field):
-    db = get_database()
+'''
+Take in a file and a name and create or replace a table with that name.  Before the table is created, reduce 
+dimensionality by combining the pattern datetimes and the standard datetimes and removing the former from the 
+data set.
+'''
+
+
+def fill_db(file):
+    from pandas.compat import FileNotFoundError
+    try:
+        df = pandas.read_csv(file)
+    except FileNotFoundError as e:
+        log.add_event(str(e))
+        print(str(e))
+        exit()
+    df.columns = ['title', 'component_id', 'start_date', 'end_date', 'day',
+                  'start_time', 'duration', 'pattern_day', 'pattern_start_time',
+                  'pattern_duration', 'building_id', 'room_number', 'professor']
+    df.index.name = 'crn'
+    df = df.dropna(thresh=8)
+    df = df.fillna('')
+    df['day'] = df[['day', 'pattern_day']].apply(lambda x: ''.join(x.map(str)), axis=1)
+    lst = []
+    for index, row in df.iterrows():
+        if str(row['day']) == 'Monday':
+            lst.append('2018-01-01')
+        if str(row['day']) == 'Tuesday':
+            lst.append('2018-01-02')
+        if str(row['day']) == 'Wednesday':
+            lst.append('2018-01-03')
+        if str(row['day']) == 'Thursday':
+            lst.append('2018-01-04')
+        if str(row['day']) == 'Friday':
+            lst.append('2018-01-05')
+        if str(row['day']) == 'Saturday':
+            lst.append('2018-01-06')
+        if str(row['day']) == 'Sunday':
+            lst.append('2018-01-07')
+    df['date'] = lst
+    df['start_time'] = df[['start_time', 'pattern_start_time']].apply(lambda x: ''.join(x.map(str)), axis=1) + ':00'
+    df['duration'] = df[['duration', 'pattern_duration']].apply(lambda x: ''.join(x.map(str)), axis=1) + ':00'
+    df['start'] = df[['date', 'start_time']].apply(lambda x: 'T'.join(x.map(str)), axis=1)
+    df['end'] = pandas.to_datetime(df['start_time']) + pandas.to_timedelta(df['duration'])
+    df['end'] = df['end'].dt.time
+    df['end'] = df[['date', 'end']].apply(lambda x: 'T'.join(x.map(str)), axis=1)
+    df = df.drop(['start_date', 'end_date', 'day', 'start_time', 'duration','pattern_day', 'pattern_start_time',
+                  'pattern_duration', 'building_id', 'date', ], 1)
+    conn = sqlite3.connect('instance/skemaDB.sqlite')
+    df.to_sql('winter2017', conn, if_exists='replace')
+    conn.commit()
+
+
+def get_events():
+    db = get_db()
     cursor = db.cursor()
-    cursor.execute('''SELECT ''' + field + ''' FROM schedules''')
-    all_rows = cursor.fetchall()
-    for row in all_rows:
-        print(row[0])
+    statement = 'SELECT * FROM winter2017'
+    data = cursor.execute(statement).fetchall()
+    classes = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
+    return str(json.dumps(({'classes': classes})))
 
-# initialize the database by running "flask init_database" in
-# the venv.  It will create a new skemaDB.sqlite file in
-# the instance folder
-@click.command('init_database')
-@with_appcontext
-def init_database_command():
-    init_database()
-    event = 'Initialized the database'
-    log.add_event(event)
-    click.echo(event)
 
-# returns any column passed in as an argument.
-# For Example: 'flask fetch_database course_id'
-# will return all of the course ids in the database
-@click.command('fetch_database')
-@click.argument('field')
-@with_appcontext
-def fetch_database_command(field):
-    fetch_database(field)
+def get_classes(subject, prof, years):
+    db = get_db()
+    cursor = db.cursor()
+    if len(years) == 1:
+        statement = 'SELECT * FROM winter2017 WHERE ' \
+                    'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\''
+    elif len(years) == 2:
+        statement = 'SELECT * FROM winter2017 WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\''
+    elif len(years) == 3:
+        statement = 'SELECT * FROM winter2017 WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\''
+    elif len(years) == 4:
+        statement = 'SELECT * FROM winter2017 WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\''
+    else:
+        statement = 'SELECT * FROM winter2017 WHERE title LIKE \'' + subject \
+                    + '%\' AND professor LIKE \'' + prof + '\''
+    data = cursor.execute(statement).fetchall()
+    classes = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
+    return str(json.dumps(({'classes': classes})))
 
-# fills the database with a file from the given path.
-# Will throw an error if the file passed is not in
-# the correct format.
-@click.command('fill_database')
+
+def get_profs():
+    db = get_db()
+    cursor = db.cursor()
+    statement = 'SELECT DISTINCT professor FROM winter2017 ORDER BY professor'
+    rows = cursor.execute(statement).fetchall()
+    lst = []
+    for row in rows:
+        lst.append(row[0])
+    return lst
+
+
+def get_subject():
+    db = get_db()
+    cursor = db.cursor()
+    statement = 'SELECT DISTINCT (SUBSTR(title, 0, 5)) FROM winter2017'
+    rows = cursor.execute(statement).fetchall()
+    lst = []
+    for row in rows:
+        lst.append(row[0])
+    return lst
+
+
+'''
+The following methods are for command line manipulation of the this app.  They are not necessary when working within
+the webpage.  
+
+fills the database with a file from the given path.Will throw an error if the file passed is not in the correct format.
+'''
+
+
+@click.command('fill_db')
 @click.argument('file')
 @with_appcontext
-def fill_database_command(file):
-    from . import parser
-    parser.parse(file)
-    event = 'Database filled'
-    log.add_event(event)
-
-# drops the table from the database, removing everything
-# in it.
-@click.command('destroy_database')
-@with_appcontext
-def destroy_database_command():
-    destroy_database()
-    event = 'Database destroyed'
+def fill_db_command(file):
+    fill_db(file)
+    event = 'Database filled with ' + file
     log.add_event(event)
     click.echo(event)
 
 
 
-# these are all commands that can be used in the virtual
-# environment.  Call them before calling flask run.
+'''
+These are all commands that can be used in the virtual environment.  Call them before calling flask run.
+'''
+
+
 def init_app(app):
-    app.teardown_appcontext(close_database)
-    app.cli.add_command(init_database_command)
-    app.cli.add_command(fill_database_command)
-    app.cli.add_command(destroy_database_command)
-    app.cli.add_command(fetch_database_command)
+    app.teardown_appcontext(close_db)
+    app.cli.add_command(fill_db_command)

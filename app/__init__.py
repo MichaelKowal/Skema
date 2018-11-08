@@ -1,7 +1,7 @@
 import os
-
 from flask import Flask
 from . import log
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -16,10 +16,11 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    # create an instance folder if none exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
-        event = 'ERROR! OSError - command not found'
+        event = 'Instance path already exists'
         log.add_event(event)
 
     from .views import views
