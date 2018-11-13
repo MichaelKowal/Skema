@@ -97,6 +97,10 @@ def get_events():
 def get_classes(subject, prof, years):
     db = get_db()
     cursor = db.cursor()
+    if subject == 'Subject':
+        subject = '____'
+    if prof == "Instructor":
+        prof = '%'
     if len(years) == 1:
         statement = 'SELECT * FROM winter2017 WHERE ' \
                     'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\''
@@ -115,6 +119,30 @@ def get_classes(subject, prof, years):
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
                     ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\''
+    elif len(years) == 4:
+        statement = 'SELECT * FROM winter2017 WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\''
+    elif len(years) == 4:
+        statement = 'SELECT * FROM winter2017 WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\''
+    elif len(years) == 4:
+        statement = 'SELECT * FROM winter2017 WHERE ' \
+                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\'' + \
+                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[6]) + '%\''
     else:
         statement = 'SELECT * FROM winter2017 WHERE title LIKE \'' + subject \
                     + '%\' AND professor LIKE \'' + prof + '\''
@@ -130,7 +158,8 @@ def get_profs():
     rows = cursor.execute(statement).fetchall()
     lst = []
     for row in rows:
-        lst.append(row[0])
+        if sum(1 for c in row[0] if c.isupper()) < 4 and row[0] != '':
+            lst.append(row[0])
     return lst
 
 
