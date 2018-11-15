@@ -3,15 +3,15 @@ var $calendar;
 function loadDoc(subject, professor, check100, check200, check300, check400, checkOther) {
     subjectString = subject.options[subject.selectedIndex].text;
     profString = professor.options[professor.selectedIndex].text;
-    requestURL = "http://localhost:5000/data?subject=" + subjectString + "&prof=" + profString;
+    requestURL = "http://localhost:5000/skema/data?subject=" + subjectString + "&prof=" + profString;
     if(check100.checked == true) requestURL += "&level100=true";
     if(check200.checked == true) requestURL += "&level200=true";
     if(check300.checked == true) requestURL += "&level300=true";
     if(check400.checked == true) requestURL += "&level400=true";
     if(checkOther.checked == true) requestURL += "&levelOther=true";
 
-    var json = new XMLHttpRequest();
-    json.onreadystatechange = function() {
+    var dataRequest = new XMLHttpRequest();
+    dataRequest.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
             var temp = JSON.parse(this.responseText);
             var array = temp.classes;
@@ -23,8 +23,8 @@ function loadDoc(subject, professor, check100, check200, check300, check400, che
             }
         }
     };
-    json.open("GET", requestURL);
-    json.send();
+    dataRequest.open("GET", requestURL);
+    dataRequest.send();
 }
 
 function loadCalendar() {

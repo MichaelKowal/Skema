@@ -5,6 +5,7 @@ skema_venv/*
 *.pyc
 __pycache__/
 instance/*
+uploads/*
 .pytest_cache/
 .DS_Store
 venv/*

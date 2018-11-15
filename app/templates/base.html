@@ -1,6 +1,7 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Flaskr</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{ url_for('static', filename='js/functions.js') }}"></script>
 <nav>
   <ul>
     <li><a href="{{ url_for('views.main_page') }}">Skema</a>

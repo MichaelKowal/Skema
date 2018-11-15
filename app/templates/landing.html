@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Skema{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <!-- Instructor Selection -->
+        <div class="drop-down-nav">
+            <div class="form-group">
+                <label for="semesterSelect">Semester</label>
+                <select class="form-control" id="semesterSelect" name="semester">
+                    <option>Semester</option>
+                    {% for semester in semesters %}
+                        <option>{{ semester }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    <input type=submit value=Start>
+  </form>
+{% endblock %}

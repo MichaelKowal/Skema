@@ -5,7 +5,7 @@ from flask import (
 )
 from . import database
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__, url_prefix='/skema')
 
 
 def login_required(view):
