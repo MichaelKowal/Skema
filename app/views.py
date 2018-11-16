@@ -1,20 +1,21 @@
 import os
-from flask import Blueprint, render_template, request, redirect, flash, url_for
-from werkzeug.contrib.cache import MemcachedCache
+from flask import Blueprint, render_template, request, redirect, flash, url_for, make_response, session
 from werkzeug.utils import secure_filename
 
 from . import auth
 from . import database as db
 
-cache = MemcachedCache(['127.0.0.1:11211'])
 views = Blueprint('views', __name__, template_folder='templates')
 
 
 @views.route('/skema', methods=['GET'])
 def main_page():
-    print(get_chosen_semester())
-    subjects = db.get_subject(get_chosen_semester())
-    profs = db.get_profs(get_chosen_semester())
+    if session['semester'][0] is None or session['semester'][1] > 1:
+        return redirect(url_for('views.start'))
+    print(session['semester'])
+    session['semester'] = session['semester'][0], session['semester'][1] + 1
+    subjects = db.get_subject(session['semester'][0])
+    profs = db.get_profs(session['semester'][0])
     return render_template('skema.html', subjects=subjects, profs=profs)
 
 
@@ -34,7 +35,7 @@ def return_data():
         years.append(5)
         years.append(6)
         years.append(7)
-    return db.get_classes(get_chosen_semester(), request_args['subject'], request_args['prof'], years)
+    return db.get_classes(session['semester'][0], request_args['subject'], request_args['prof'], years)
 
 
 @views.route('/skema/admin', methods=['GET', 'POST'])
@@ -65,16 +66,11 @@ def upload():
 @views.route('/skema/start', methods=['GET','POST'])
 def start():
     if request.method == 'POST':
-        semester = request.form.get('semester')
-        cache.set('semester', semester, 0)
-        return redirect(url_for('views.main_page'))
+        toople = request.form.get('semester'), 0
+        session['semester'] = toople
+        print(session['semester'])
+        resp = make_response(redirect(url_for('views.main_page')))
+        return resp
     semesters = db.get_semesters()
     return render_template('landing.html', semesters=semesters)
 
-
-def get_chosen_semester():
-    semester = cache.get('semester')
-    if semester is None:
-        semester = 'Winter2018'
-        cache.set('my-item', semester, 0)
-    return semester

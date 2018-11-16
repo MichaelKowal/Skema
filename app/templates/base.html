@@ -2,16 +2,6 @@
 <title>{% block title %}{% endblock %} - Flaskr</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
-<nav>
-  <ul>
-    <li><a href="{{ url_for('views.main_page') }}">Skema</a>
-    {% if g.user %}
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-    {% else %}
-      <li><a href="{{ url_for('auth.login') }}">Log In</a>
-    {% endif %}
-  </ul>
-</nav>
 <section class="content">
   <header>
     {% block header %}{% endblock %}
