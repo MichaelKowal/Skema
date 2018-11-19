@@ -71,18 +71,12 @@
             <h1>SKEMA</h1>
         </div>
 
-        <ul class="list-unstyled components">
-
-            <!-- Title -->
-
-            <li>
-                <p>Create Calendar</p>
-            </li>
+        <div class="list-unstyled components">
 
             <!-- Subject Selection -->
             <!-- Some of this can be cleaned up with Jinja Templates-->
 
-            <li>
+
                 <div class="drop-down-nav">
                     <div class="form-group">
                         <label for="subjectSelect">Subject</label>
@@ -94,10 +88,10 @@
                         </select>
                     </div>
                 </div>
-            </li>
+
 
             <!-- Instructor Selection -->
-            <li>
+
                 <div class="drop-down-nav">
                     <div class="form-group">
                         <label for="profSelect">Instructor</label>
@@ -109,11 +103,11 @@
                         </select>
                     </div>
                 </div>
-            </li>
+
 
             <!-- Term Selection -->
 
-            <li>
+
                 <div class="drop-down-nav">
                     <div class="form-group">
                         <label for="exampleFormControlSelect1">Term</label>
@@ -126,11 +120,11 @@
                         </select>
                     </div>
                 </div>
-            </li>
+
 
 
             <!-- Year Selection -->
-            <li>
+
                 <div class="container">
                     <div class="row">
                         <div class="col-sm">
@@ -175,23 +169,27 @@
                         </div>
                     </div>
                 </div>
-            </li>
 
-            <li>
+
+
                 <div class="button-search">
                     <button type="button" id="search-button" class="btn btn-outline-light"
-                            onclick="loadDoc(document.getElementById('subjectSelect'),
+                            onclick="getCoursesFromServer(document.getElementById('subjectSelect'),
                             document.getElementById('profSelect'),
                             document.getElementById('check100'),
                             document.getElementById('check200'),
                             document.getElementById('check300'),
                             document.getElementById('check400'),
-                            document.getElementById('checkOther'))">
+                            document.getElementById('checkOther'),
+                            document.getElementById('courseList'))">
                         Add Courses
                     </button>
                 </div>
-            </li>
-        </ul>
+                <div class="courses">
+                    <ul id="courseList">
+                    </ul>
+                </div>
+        </div>
     </nav>
 
 

@@ -1,30 +1,40 @@
 var $calendar;
+var coursesInSideBar = [];
 
-function loadDoc(subject, professor, check100, check200, check300, check400, checkOther) {
+function getCoursesFromServer(subject, professor, check100, check200, check300, check400, checkOther, displayedCoursesList) {
     subjectString = subject.options[subject.selectedIndex].text;
     profString = professor.options[professor.selectedIndex].text;
     requestURL = "http://localhost:5000/data?subject=" + subjectString + "&prof=" + profString;
-    if(check100.checked == true) requestURL += "&level100=true";
-    if(check200.checked == true) requestURL += "&level200=true";
-    if(check300.checked == true) requestURL += "&level300=true";
-    if(check400.checked == true) requestURL += "&level400=true";
-    if(checkOther.checked == true) requestURL += "&levelOther=true";
+    if(check100.checked === true) requestURL += "&level100=true";
+    if(check200.checked === true) requestURL += "&level200=true";
+    if(check300.checked === true) requestURL += "&level300=true";
+    if(check400.checked === true) requestURL += "&level400=true";
+    if(checkOther.checked === true) requestURL += "&levelOther=true";
 
     var json = new XMLHttpRequest();
     json.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-            var temp = JSON.parse(this.responseText);
-            var array = temp.classes;
-            //This for loop takes years to run if we load the entire db. I think the renderEvent code is slow, so we need to find a way to only add one event at a time
-            for(var i=0; i<10; i++)
-            {
-                console.log(array[i]);
-                $calendar.fullCalendar('renderEvent', array[i], true);
+            var coursesReturnedFromServer = JSON.parse(this.responseText);
+            coursesInSideBar = coursesReturnedFromServer.classes;
+            displayedCoursesList.innerHTML = null;
+            var newDisplayedCoursesList = "";
+            for(var i=0; i<coursesInSideBar.length; i++){
+                newDisplayedCoursesList += "<li><a href=\"#\" onclick='addCourseToCalendar(this)'>" + coursesInSideBar[i]["title"] + "</a></li>\n";
             }
+            displayedCoursesList.innerHTML = newDisplayedCoursesList;
         }
     };
     json.open("GET", requestURL);
     json.send();
+}
+
+function addCourseToCalendar(courseClicked){
+    var courseTitle = courseClicked.innerText;
+    for(var i=0; i<coursesInSideBar.length; i++){
+        if(courseTitle === coursesInSideBar[i]["title"]){
+            $calendar.fullCalendar('renderEvent', coursesInSideBar[i], true)
+        }
+    }
 }
 
 function loadCalendar() {
