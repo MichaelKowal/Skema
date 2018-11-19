@@ -1,21 +1,23 @@
+<!--Stylesheets-->
+<!-- Bootstrap CSS CDN-->
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
+<!-- Custom CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style-ext.css') }}">
+
+<script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+<!--Favicon -->
+<link rel="shortcut icon" href="{{ url_for('static', filename='media/skema-favicon.png') }}">
+
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Upload{% endblock %}</h1>
-    <nav>
-      <ul>
-        <li><a href="{{ url_for('views.start') }}">Skema</a>
-        {% if g.user %}
-          <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-        {% else %}
-          <li><a href="{{ url_for('auth.login') }}">Log In</a>
-        {% endif %}
-      </ul>
-    </nav>
+
 {% endblock %}
 
 {% block content %}
-<form method=post enctype=multipart/form-data action="{{ url_for('views.upload') }}">
+
+    <div class="loginForms">
+    <form method=post enctype=multipart/form-data action="{{ url_for('views.upload') }}">
     <div class="drop-down-nav">
         <div class="form-group">
             <label for="semesterSelect">Semester</label>
@@ -38,6 +40,7 @@
         </div>
     </div>
     <input type=file name=file>
-    <input type=submit value=Upload>
+        <button type=submit value=Upload class="btn btn-outline-secondary">Submit</button>
 </form>
+    </div>
 {% endblock %}
