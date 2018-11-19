@@ -1,0 +1,65 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+
+<!--Stylesheets-->
+<!-- Bootstrap CSS CDN-->
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
+<!-- Custom CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style-ext.css') }}">
+
+<script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+<!--Favicon -->
+<link rel="shortcut icon" href="{{ url_for('static', filename='media/skema-favicon.png') }}">
+
+
+<section class="content">
+    <div class="site-wrapper">
+
+        <div class="site-wrapper-inner">
+
+            <div class="cover-container">
+                <div class="masthead clearfix">
+                    <div class="inner">
+                        <h3 class="masthead-brand">Login</h3>
+                        <nav>
+                            <ul class="nav masthead-nav">
+                                <li><a href="{{ url_for('views.start') }}">Open Skema</a></li>
+                                <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="inner cover">
+
+                    <div class="logoMain">
+                        <img src="../static/media/skema-logo-light.svg"
+                             onerror="this.onerror=null; this.src='../static/media/skema-logo-light.svg'">
+                    </div>
+
+                    <p class="lead">A simple and effective way to review course schedules at the University of Northern
+                        British
+                        Columbia.</p>
+
+                    <header>
+
+
+                        {% block header %}{% endblock %}
+                    </header>
+                    {% for message in get_flashed_messages() %}
+                        <div class="flash">{{ message }}</div>
+                    {% endfor %}
+
+                    {% block content %}{% endblock %}
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</section>
