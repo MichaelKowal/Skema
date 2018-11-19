@@ -21,6 +21,7 @@ def main_page():
 
 @views.route('/skema/data', methods=['GET'])
 def return_data():
+    print(session)
     request_args = request.args
     years = []
     if 'level100' in request_args:
