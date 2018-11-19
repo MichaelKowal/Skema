@@ -1,23 +1,51 @@
+<!--Dependencies-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--Stylesheets-->
+<!-- Bootstrap CSS CDN-->
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
+<!-- Custom CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style-ext.css') }}">
+
+<script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+<!--Favicon -->
+<link rel="shortcut icon" href="{{ url_for('static', filename='media/skema-favicon.png') }}">
+
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
-  <nav>
-    <ul>
-      <li><a href="{{ url_for('views.start') }}">Skema</a>
-      {% if g.user %}
-        <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-      {% endif %}
-    </ul>
-  </nav>
+
+
+    <nav>
+
+        <!--<div class="loginElements">
+            <ul class="list-unstyled">
+                <li><a href="{{ url_for('views.start') }}" class="btn btn-secondary" role="button" aria-pressed="true">Open
+                    Skema</a></li>
+                {% if g.user %}
+                   <li><a href="{{ url_for('auth.logout') }}" class="btn btn-secondary" role="button" aria-pressed="true">Log
+                        Out</a></li>
+                {% endif %}
+            </ul>
+            </div>-->
+
+    </nav>
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
-  </form>
+    <div class="loginForms">
+    <form  method="post">
+
+
+        <label for="username" class="formAdjust">Username</label>
+        <input name="username" id="username" required class="form-control"></li>
+        <label for="password" class="formAdjust">Password</label>
+        <input type="password" name="password" id="password" required class="form-control">
+        <button id="loginButton" type="submit" class="btn btn-outline-secondary" >Log In</button>
+
+    </form>
+    </div>
+
+
 {% endblock %}
