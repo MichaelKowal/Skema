@@ -130,6 +130,10 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
+ul, li{
+    list-style:none;
+}
+
 a.download {
     background: #fff;
     color: #425D57;
