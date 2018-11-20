@@ -167,15 +167,20 @@
             <li>
                 <div class="button-search">
                     <button type="button" id="search-button" class="btn btn-outline-light"
-                            onclick="loadDoc(document.getElementById('subjectSelect'),
+                            onclick="getCoursesFromServer(document.getElementById('subjectSelect'),
                             document.getElementById('profSelect'),
                             document.getElementById('check100'),
                             document.getElementById('check200'),
                             document.getElementById('check300'),
                             document.getElementById('check400'),
-                            document.getElementById('checkOther'))">
+                            document.getElementById('checkOther'),
+                            document.getElementById('courseList'))">
                         Add Courses
                     </button>
+                </div>
+                <div class="courses">
+                    <ul id="courseList">
+                    </ul>
                 </div>
             </li>
         </ul>

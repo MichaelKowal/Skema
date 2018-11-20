@@ -18,7 +18,7 @@ def main_page():
     return render_template('skema.html', subjects=subjects, profs=profs)
 
 
-@views.route('/skema/data', methods=['GET'])
+@views.route('/data', methods=['GET'])
 def return_data():
     print(session)
     request_args = request.args
