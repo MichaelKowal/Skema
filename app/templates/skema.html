@@ -2,25 +2,37 @@
 <html>
 
 <head>
+    <!--Citations -->
+    <!-- 1.) Sidebar Code Source from: https://bootstrapious.com/p/bootstrap-sidebar on Sept, 19, 2018 -->
+
+    <!--Dependencies-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="{{ url_for('static', filename='fullcalendar.min.css') }}" rel='stylesheet' />
-    <link href="{{ url_for('static', filename='fullcalendar.print.css') }}" rel='stylesheet' media='print' />
+    <link href="{{ url_for('static', filename='fullcalendar.min.css') }}" rel='stylesheet'/>
+    <link href="{{ url_for('static', filename='fullcalendar.print.css') }}" rel='stylesheet' media='print'/>
     <script src="{{ url_for('static', filename='lib/moment.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-4/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='fullcalendar.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
-    <script>
 
+    <!--Stylesheets-->
+    <!-- Bootstrap CSS CDN-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    </script>
+    <!--Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='media/skema-favicon.png') }}">
+
     <style>
 
         body {
             margin: 0;
             padding: 0;
-            font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+            font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
             font-size: 14px;
         }
 
@@ -52,12 +64,6 @@
     </style>
     <title>Skema</title>
 
-    <!--Citations -->
-    <!-- 1.) Sidebar Code Source from: https://bootstrapious.com/p/bootstrap-sidebar on Sept, 19, 2018 -->
-    <!-- Bootstrap CSS CDN-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4/css/bootstrap.min.css') }}">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
@@ -68,30 +74,35 @@
     <!-- Sidebar Navigation -->
     <nav id="sidebar">
         <div class="sidebar-header">
-            <h1>SKEMA</h1>
+            <img src="static/media/skema-logo-light-medium.svg" onerror="this.onerror=null; this.src='static/media/skema-logo-light-medium.svg'">
         </div>
 
-        <div class="list-unstyled components">
+        <ul class="list-unstyled components">
+
+            <!-- Title -->
+            <li>
+                <p>Create Calendar</p>
+            </li>
 
             <!-- Subject Selection -->
             <!-- Some of this can be cleaned up with Jinja Templates-->
 
-
+            <li>
                 <div class="drop-down-nav">
                     <div class="form-group">
                         <label for="subjectSelect">Subject</label>
                         <select class="form-control" id="subjectSelect">
                             <option>Subject</option>
                             {% for subject in subjects %}
-                            <option>{{ subject }}</option>
+                                <option>{{ subject }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-
+            </li>
 
             <!-- Instructor Selection -->
-
+            <li>
                 <div class="drop-down-nav">
                     <div class="form-group">
                         <label for="profSelect">Instructor</label>
@@ -103,28 +114,10 @@
                         </select>
                     </div>
                 </div>
-
-
-            <!-- Term Selection -->
-
-
-                <div class="drop-down-nav">
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Term</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
-                            <option>Term</option>
-                            <option>Fall</option>
-                            <option>Winter</option>
-                            <option>Spring</option>
-                            <option>Summer</option>
-                        </select>
-                    </div>
-                </div>
-
-
+            </li>
 
             <!-- Year Selection -->
-
+            <li>
                 <div class="container">
                     <div class="row">
                         <div class="col-sm">
@@ -169,9 +162,9 @@
                         </div>
                     </div>
                 </div>
+            </li>
 
-
-
+            <li>
                 <div class="button-search">
                     <button type="button" id="search-button" class="btn btn-outline-light"
                             onclick="getCoursesFromServer(document.getElementById('subjectSelect'),
@@ -189,29 +182,145 @@
                     <ul id="courseList">
                     </ul>
                 </div>
-        </div>
+            </li>
+        </ul>
     </nav>
 
 
-    <!-- Page Content Holder -->
+    <!-- Page Content and Navigation Bar -->
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
     <div id="content">
 
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
 
+
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+
+
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-outline-secondary" data-target="#" data-toggle="tooltip"
+                                    data-placement="bottom" title="Be careful: This will reload the current calendar.">
+                                Reload
+                            </button>
+                        </li>
+                        <li class="nav-item active">
+                            <button type="button" class="btn btn-outline-dark" data-toggle="modal"
+                                    data-target="#contactModal">
+                                Contact
+                            </button>
+
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
         </nav>
+
+
+        <!-- Modal for Contact -->
+        <div class="modal fade" id="contactModal" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Course Change Submission</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-dark" role="alert">
+                            All submissions will be forwarded to the scheduling department at UNBC.
+                        </div>
+                        <form>
+                            <div class="form-group">
+                                <label for="emailFormSub">Email address</label>
+                                <input type="email" class="form-control" id="emailFormSub"
+                                       placeholder="you@unbc.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="subjectFormSub">Select Subject</label>
+                                <select class="form-control" id="subjectForSub">
+                                    {% for subject in subjects %}
+                                        <option>{{ subject }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="profFormSub">Select Instructor</label>
+                                <select class="form-control" id="profFormSub">
+                                    {% for prof in profs %}
+                                        <option>{{ prof }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="detailsFormSub">Details of Request</label>
+                                <textarea class="form-control" id="detailsFormSub" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close
+                        </button>
+                        <button type="button" class="btn btn-dark" data-toggle="modal"  data-target="#successModal" data-dismiss="modal">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModal"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="successModalLabel">Success!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success" role="alert">
+                            Submission successfully sent. You will be contacted by the scheduling department shortly.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!--<div id="calendar" style="height: 800px;"></div>-->
         <!--Calendar Table -->
         <!--This is just filler - we'll have to come up with something more creative to parse a .csv into a table-->
         <!--I think this is the solution:   http://christopheviau.com/d3_tutorial/      -->
         <div id='script-warning'>
-		Error getting data from <code>/data</code> endpoint.
-	    </div>
+            Error getting data from <code>/data</code> endpoint.
+        </div>
         <div id="loading">loading...</div>
         <div id='calendar'></div>
     </div>
 
 </div>
+
 
 </body>
 

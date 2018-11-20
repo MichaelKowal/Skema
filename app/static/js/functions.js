@@ -4,6 +4,7 @@ var coursesInSideBar = [];
 function getCoursesFromServer(subject, professor, check100, check200, check300, check400, checkOther, displayedCoursesList) {
     subjectString = subject.options[subject.selectedIndex].text;
     profString = professor.options[professor.selectedIndex].text;
+
     requestURL = "http://localhost:5000/data?subject=" + subjectString + "&prof=" + profString;
     if(check100.checked === true) requestURL += "&level100=true";
     if(check200.checked === true) requestURL += "&level200=true";
@@ -11,8 +12,8 @@ function getCoursesFromServer(subject, professor, check100, check200, check300, 
     if(check400.checked === true) requestURL += "&level400=true";
     if(checkOther.checked === true) requestURL += "&levelOther=true";
 
-    var json = new XMLHttpRequest();
-    json.onreadystatechange = function() {
+    var dataRequest = new XMLHttpRequest();
+    dataRequest.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
             var coursesReturnedFromServer = JSON.parse(this.responseText);
             coursesInSideBar = coursesReturnedFromServer.classes;
@@ -24,8 +25,8 @@ function getCoursesFromServer(subject, professor, check100, check200, check300, 
             displayedCoursesList.innerHTML = newDisplayedCoursesList;
         }
     };
-    json.open("GET", requestURL);
-    json.send();
+    dataRequest.open("GET", requestURL);
+    dataRequest.send();
 }
 
 function addCourseToCalendar(courseClicked){

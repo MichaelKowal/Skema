@@ -15,7 +15,6 @@ def create_app(test_config=None):
         app.config.from_pyfile('config.py', silent=True)
     else:
         app.config.from_mapping(test_config)
-
     # create an instance folder if none exists
     try:
         os.makedirs(app.instance_path)
@@ -25,6 +24,9 @@ def create_app(test_config=None):
 
     from .views import views
     app.register_blueprint(views)
+
+    from app import auth
+    app.register_blueprint(auth.bp)
 
     from . import database
     database.init_app(app)
