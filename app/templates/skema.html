@@ -167,15 +167,20 @@
             <li>
                 <div class="button-search">
                     <button type="button" id="search-button" class="btn btn-outline-light"
-                            onclick="loadDoc(document.getElementById('subjectSelect'),
+                            onclick="getCoursesFromServer(document.getElementById('subjectSelect'),
                             document.getElementById('profSelect'),
                             document.getElementById('check100'),
                             document.getElementById('check200'),
                             document.getElementById('check300'),
                             document.getElementById('check400'),
-                            document.getElementById('checkOther'))">
+                            document.getElementById('checkOther'),
+                            document.getElementById('courseList'))">
                         Add Courses
                     </button>
+                </div>
+                <div class="courses">
+                    <ul id="courseList">
+                    </ul>
                 </div>
             </li>
         </ul>
@@ -194,6 +199,7 @@
             <div class="container">
 
 
+
                 <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -202,6 +208,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav ml-auto">
+
 
                         <li class="nav-item">
                             <button type="button" class="btn btn-outline-secondary" data-target="#" data-toggle="tooltip"

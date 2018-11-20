@@ -2,8 +2,8 @@ import os
 from flask import Blueprint, render_template, request, redirect, flash, url_for, make_response, session
 from werkzeug.utils import secure_filename
 
-from . import auth
 from . import database as db
+from . import auth
 
 views = Blueprint('views', __name__, template_folder='templates')
 
@@ -19,7 +19,8 @@ def main_page():
     return render_template('skema.html', subjects=subjects, profs=profs)
 
 
-@views.route('/skema/data', methods=['GET'])
+
+@views.route('/data', methods=['GET'])
 def return_data():
     print(session)
     request_args = request.args

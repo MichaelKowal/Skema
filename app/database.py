@@ -84,7 +84,7 @@ def fill_db(semester, file):
     df.to_sql(semester, conn, if_exists='replace')
     conn.commit()
     print('database updated!')
-    get_semesters()
+
 
 
 def get_events(semester):

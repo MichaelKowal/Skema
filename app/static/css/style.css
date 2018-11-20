@@ -130,6 +130,10 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
+ul, li{
+    list-style:none;
+}
+
 a.download {
     background: #fff;
     color: #425D57;
@@ -159,6 +163,7 @@ a.article:hover {
 @media (max-width: 768px) {
     #sidebar {
 
+
     }
     #sidebar.active {
         margin-left: 0;
@@ -167,6 +172,16 @@ a.article:hover {
 
     }
 }
+/* ---------------------------------------------------
+    LOGO
+----------------------------------------------------- */
+
+.h1, h1{
+    font-family: 'Poppins', sans-serif, thin;
+
+    font-weight: lighter;
+}
+
 /* ---------------------------------------------------
     LOGO
 ----------------------------------------------------- */
@@ -214,7 +229,6 @@ a.article:hover {
     border-color: none !important;
 }
 
-.navbar-nav > li{
-  padding-left:10px;
-
+.navbar-nav > li {
+    padding-left: 10px;
 }
