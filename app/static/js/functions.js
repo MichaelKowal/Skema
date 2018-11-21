@@ -20,8 +20,7 @@ function getCoursesFromServer(subject, professor, check100, check200, check300, 
             displayedCoursesList.innerHTML = null;
             var newDisplayedCoursesList = "";
             for(var i=0; i<coursesInSideBar.length; i++){
-                newDisplayedCoursesList += "<li><a href=\"#\" onclick='addCourseToCalendar(this)'>" +
-                    coursesInSideBar[i]["title"] + "</a></li>\n";
+                newDisplayedCoursesList += "<li><a href=\"#\" onclick='addCourseToCalendar(this)'>" + coursesInSideBar[i]["title"] + "</a></li>\n";
             }
             displayedCoursesList.innerHTML = newDisplayedCoursesList;
         }
