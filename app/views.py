@@ -10,7 +10,7 @@ views = Blueprint('views', __name__, template_folder='templates')
 
 @views.route('/skema', methods=['GET'])
 def main_page():
-    if not session.keys().__contains__('semester') or session['semester'][0] is None or session['semester'][1] > 1:
+    if not session.keys().__contains__('semester') or session['semester'][0] is None or int(session['semester'][1]) > 1:
         return redirect(url_for('views.start'))
     print(session['semester'])
     session['semester'] = session['semester'][0], session['semester'][1] + 1

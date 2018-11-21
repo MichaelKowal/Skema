@@ -38,6 +38,11 @@ function addCourseToCalendar(courseClicked){
     }
 }
 
+function removeAllEvents(){
+    $calendar.fullCalendar('removeEvents');
+    document.getElementById("courseList").innerHTML = "";
+}
+
 function loadCalendar() {
     $calendar = $('#calendar').fullCalendar({
         defaultView: 'agendaWeek',
