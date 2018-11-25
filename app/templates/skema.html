@@ -74,13 +74,22 @@
     <!-- Sidebar Navigation -->
     <nav id="sidebar">
         <div class="sidebar-header">
-            <img src="static/media/skema-logo-light.svg" onerror="this.onerror=null; this.src='static/media/skema-logo-light-medium.svg'">
+            <img src="static/media/skema-logo-light.svg"
+                 onerror="this.onerror=null; this.src='static/media/skema-logo-light-medium.svg'">
         </div>
 
         <ul class="list-unstyled components">
 
             <!-- Subject Selection -->
             <!-- Some of this can be cleaned up with Jinja Templates-->
+
+            <li>
+                <div class="drop-down-nav">
+                    <option>
+                        {{ semester }}
+                    </option>
+                </div>
+            </li>
 
             <li>
                 <div class="drop-down-nav">
@@ -95,6 +104,7 @@
                     </div>
                 </div>
             </li>
+
 
             <!-- Instructor Selection -->
             <li>
@@ -205,7 +215,6 @@
             <div class="container">
 
 
-
                 <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -225,8 +234,15 @@
                         </li>
                         <li class="nav-item active">
                             <button type="button" class="btn btn-outline-dark" data-toggle="modal"
-                                    data-target="#contactModal">
+                                    data-target="#requestModal">
                                 Request Changes
+                            </button>
+
+                        </li>
+                        <li class="nav-item active">
+                            <button type="button" class="btn btn-outline-dark" data-toggle="modal"
+                                    data-target="#contactModal">
+                                Contact
                             </button>
 
                         </li>
@@ -237,8 +253,8 @@
         </nav>
 
 
-        <!-- Modal for Contact -->
-        <div class="modal fade" id="contactModal" tabindex="-1" role="dialog"
+        <!-- Modal for Request -->
+        <div class="modal fade" id="requestModal" tabindex="-1" role="dialog"
              aria-labelledby="exampleModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -267,6 +283,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
+
                             <div class="form-group">
                                 <label for="profFormSub">Select Instructor</label>
                                 <select class="form-control" id="profFormSub">
@@ -274,6 +291,51 @@
                                         <option>{{ prof }}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="detailsFormSub">Details of Request</label>
+                                <textarea class="form-control" id="detailsFormSub" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close
+                        </button>
+                        <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#successModal"
+                                data-dismiss="modal">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Contact -->
+        <div class="modal fade" id="contactModal" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Course Change Submission</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-dark" role="alert">
+                            All submissions will be forwarded to the scheduling department at UNBC.
+                        </div>
+                        <form>
+                            <div class="form-group">
+                                <label for="emailFormSub">Email address</label>
+                                <input type="email" class="form-control" id="emailFormSub"
+                                       placeholder="you@unbc.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailFormSub">Email address</label>
+                                <input class="form-control" type="text" placeholder="Name">
                             </div>
                             <div class="form-group">
                                 <label for="detailsFormSub">Details of Request</label>
@@ -284,7 +346,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close
                         </button>
-                        <button type="button" class="btn btn-dark" data-toggle="modal"  data-target="#successModal" data-dismiss="modal">
+                        <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#successModal"
+                                data-dismiss="modal">
                             Submit
                         </button>
                     </div>
@@ -315,13 +378,13 @@
         </div>
 
 
-
         <div id='script-warning'>
             Error getting data from <code>/data</code> endpoint.
         </div>
         <div id="loading">loading...</div>
         <div id='calendar'></div>
     </div>
+
 
 </div>
 

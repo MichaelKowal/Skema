@@ -128,12 +128,19 @@ function loadCalendar() {
 }
 
 
-/**
- * Working on the MODAL integrations.
- */
-eventClick:  function click (event, jsEvent, view) {
-    $('#modalTitle').html(event.title);
-    $('#modalBody').html(event.description);
-    $('#eventUrl').attr('href', event.url);
-    $('#calendarModal').modal();
-}
+$(document).ready(function() {
+    $('#bootstrapModalFullCalendar').fullCalendar({
+        events: [],
+        header: {
+            left: '',
+            center: 'prev title next',
+            right: ''
+        },
+        eventClick:  function(event, jsEvent, view) {
+            $('#modalTitle').html(event.title);
+            $('#modalBody').html(event.description);
+            $('#eventUrl').attr('href',event.url);
+            $('#fullCalModal').modal();
+        }
+    });
+});

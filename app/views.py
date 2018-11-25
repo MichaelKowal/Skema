@@ -16,7 +16,8 @@ def main_page():
     session['semester'] = session['semester'][0], session['semester'][1] + 1
     subjects = db.get_subject(session['semester'][0])
     profs = db.get_profs(session['semester'][0])
-    return render_template('skema.html', subjects=subjects, profs=profs)
+    current_semester = (session['semester'][0])
+    return render_template('skema.html', subjects=subjects, profs=profs, semester=current_semester)
 
 
 
