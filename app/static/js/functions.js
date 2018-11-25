@@ -126,3 +126,14 @@ function loadCalendar() {
         },
     });
 }
+
+
+/**
+ * Working on the MODAL integrations.
+ */
+eventClick:  function click (event, jsEvent, view) {
+    $('#modalTitle').html(event.title);
+    $('#modalBody').html(event.description);
+    $('#eventUrl').attr('href', event.url);
+    $('#calendarModal').modal();
+}
