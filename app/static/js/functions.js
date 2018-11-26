@@ -2,6 +2,9 @@ let $calendar;
 let coursesInSideBar = [];
 let courseIdsInSideBar = {};
 let courseIdsInCalendar = [];
+let backgroundColors = ["darkgreen", "gold", "red", "midnightblue", "saddlebrown", "lawngreen", "darkorange",
+    "lightsalmon", "cyan", "black", "purple", "indigo"];
+let textColors = ["white", "black", "black", "white", "black", "black", "white", "black", "black", "white", "white", "white"];
 
 function getCoursesFromServer(subject, professor, check100, check200, check300, check400, checkOther, displayedCoursesList) {
     let subjectString = subject.options[subject.selectedIndex].text;
@@ -64,6 +67,8 @@ function addCourseToCalendar(courseClicked){
     if(!courseIdsInCalendar.includes(courseId)) {
         for (let i = 0; i < coursesInSideBar.length; i++) {
             if (courseId === coursesInSideBar[i]["_id"]) {
+                coursesInSideBar[i]["color"] = backgroundColors[courseIdsInCalendar.length % 12];
+                coursesInSideBar[i]["textColor"] = textColors[courseIdsInCalendar.length % 12]
                 $calendar.fullCalendar('renderEvent', coursesInSideBar[i], true);
             }
         }
