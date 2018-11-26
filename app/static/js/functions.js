@@ -64,20 +64,38 @@ function collateCourseIds(){
 function addCourseToCalendar(courseClicked){
     let courseId = courseClicked.innerText;
     if(!courseIdsInCalendar.includes(courseId)) {
+        let colorIndex = getAvailableColor();
         for (let i = 0; i < coursesInSideBar.length; i++) {
             if (courseId === coursesInSideBar[i]["_id"]) {
-                console.log(coursesInSideBar[i]);
-                coursesInSideBar[i]["color"] = backgroundColors[courseIdsInCalendar.length % 12];
-                coursesInSideBar[i]["textColor"] = textColors[courseIdsInCalendar.length % 12];
+                coursesInSideBar[i]["color"] = backgroundColors[colorIndex];
+                coursesInSideBar[i]["textColor"] = textColors[colorIndex];
                 coursesInSideBar[i]["description"] = "Course: " + coursesInSideBar[i]['title'] + '</br>' +
                     "Professor: " + coursesInSideBar[i]['professor'] + '</br>' +
                     "Room : " + coursesInSideBar[i]['room_number'];
+                coursesInSideBar[i]["removeButton"] = "<button type=\"button\" class=\"close\" " +
+                    "data-dismiss=\"modal\" onclick=\"removeCourseFromCalendar('" + coursesInSideBar[i]["_id"] + "'" +
+                    ",'" + colorIndex + "')\">Remove</button>";
                 $calendar.fullCalendar('renderEvent', coursesInSideBar[i], true);
             }
         }
         courseIdsInCalendar.push(courseId);
     }
     courseClicked.value = "new value";
+}
+
+function removeCourseFromCalendar(courseId, colorIndex){
+    $calendar.fullCalendar("removeEvents", courseId);
+    courseIdsInCalendar = courseIdsInCalendar.filter(el => el !== courseId);
+    if(!availableColours.includes(colorIndex)) availableColours.push(colorIndex);
+}
+
+let availableColours = [0,1,2,3,4,5,6,7,8,9,10,11];
+function getAvailableColor(){
+    let colorToReturn;
+    if(availableColours.length > 0) colorToReturn = availableColours[0];
+    else colorToReturn = Math.floor(Math.random() * 12);
+    availableColours.splice(0,1);
+    return colorToReturn;
 }
 
 function removeAllEvents(){
@@ -102,6 +120,7 @@ function loadCalendar() {
         height: 'auto',
         eventClick:  function(event, jsEvent, view) {
             $('#modalBody').html(event.description);
+            $('#modalFooter').html(event.removeButton);
             $('#eventUrl').attr('href',event.url);
             $('#calendarModal').modal();
         },
