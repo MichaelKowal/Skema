@@ -22,6 +22,7 @@ function getCoursesFromServer(subject, professor, check100, check200, check300, 
         if(this.readyState === 4 && this.status === 200) {
             let coursesReturnedFromServer = JSON.parse(this.responseText);
             coursesInSideBar = coursesReturnedFromServer.classes;
+            courseIdsInSideBar = {};
             appendCourseTitleWithSection(coursesInSideBar);
             collateCourseIds();
             displayedCoursesList.innerHTML = null;
@@ -39,11 +40,7 @@ function getCoursesFromServer(subject, professor, check100, check200, check300, 
 function appendCourseTitleWithSection(dictionaries){
     for(let i=0; i<dictionaries.length; i++){
         let componentId = dictionaries[i]["component_id"];
-        if(componentId.charAt(0) === 'A'){
-            dictionaries[i]["title"] += " " + componentId;
-            dictionaries[i]["_id"] = dictionaries[i]["title"];
-        }
-        else if(componentId.charAt(0) === 'T'){
+        if(componentId.charAt(0) === 'T'){
             dictionaries[i]["_id"] = dictionaries[i]["title"] + " Tutorials";
             dictionaries[i]["title"] += " " + componentId;
         }
@@ -51,7 +48,10 @@ function appendCourseTitleWithSection(dictionaries){
             dictionaries[i]["_id"] = dictionaries[i]["title"] + " Labs";
             dictionaries[i]["title"] += " " + componentId;
         }
-
+        else{
+            dictionaries[i]["title"] += " " + componentId;
+            dictionaries[i]["_id"] = dictionaries[i]["title"];
+        }
     }
 }
 
@@ -62,7 +62,6 @@ function collateCourseIds(){
 }
 
 function addCourseToCalendar(courseClicked){
-    console.log(courseClicked.valueOf());
     let courseId = courseClicked.innerText;
     if(!courseIdsInCalendar.includes(courseId)) {
         for (let i = 0; i < coursesInSideBar.length; i++) {
@@ -75,7 +74,6 @@ function addCourseToCalendar(courseClicked){
         courseIdsInCalendar.push(courseId);
     }
     courseClicked.value = "new value";
-    console.log(courseClicked.valueOf());
 }
 
 function loadCalendar() {
