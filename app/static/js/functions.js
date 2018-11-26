@@ -66,8 +66,12 @@ function addCourseToCalendar(courseClicked){
     if(!courseIdsInCalendar.includes(courseId)) {
         for (let i = 0; i < coursesInSideBar.length; i++) {
             if (courseId === coursesInSideBar[i]["_id"]) {
+                console.log(coursesInSideBar[i]);
                 coursesInSideBar[i]["color"] = backgroundColors[courseIdsInCalendar.length % 12];
-                coursesInSideBar[i]["textColor"] = textColors[courseIdsInCalendar.length % 12]
+                coursesInSideBar[i]["textColor"] = textColors[courseIdsInCalendar.length % 12];
+                coursesInSideBar[i]["description"] = "Course: " + coursesInSideBar[i]['title'] + '</br>' +
+                    "Professor: " + coursesInSideBar[i]['professor'] + '</br>' +
+                    "Room : " + coursesInSideBar[i]['room_number'];
                 $calendar.fullCalendar('renderEvent', coursesInSideBar[i], true);
             }
         }
@@ -95,6 +99,11 @@ function loadCalendar() {
         eventLimit: true, // allow "more" link when too many events
         themeSystem: 'bootstrap4',
         events: [],
-        height: 'auto'
+        height: 'auto',
+        eventClick:  function(event, jsEvent, view) {
+            $('#modalBody').html(event.description);
+            $('#eventUrl').attr('href',event.url);
+            $('#calendarModal').modal();
+        },
     });
 }
