@@ -22,7 +22,13 @@ to run the app. Once the app is running, open a browser and navigate to
 
     localhost:5000/skema
     
-If everything is working correctly, you will see the app landing page
+If everything is working correctly, you will see the app landing page.  Choose a semester that you would like to view and click 'Start Skema'.  This will bring you to the app that allows you to create a course schedule with all of the courses available in your chosen semester.
+
+If there are no semesters available, or if the one you are looking for is not available, semesters can be uploaded by navigating to:
+
+    localhost:5000/skema/admin
+    
+From here you can choose which semester you'd like and upload a file for that semester.
 
 ***
 
@@ -41,44 +47,15 @@ If everything is working correctly, you will see the app landing page
 The nosetests command will run all unit tests found in the tests folder and any subfolder. All new code should be unit 
 tested and all unit tests should be able to pass in under 1 second before a new pull request is made.
 If you are reviewing someones pull request, please ensure you pull down their branch and ensure unit tests are passing
-before approving the request
+before approving the request.
 
 ***
 
 **Instructions for manipulating the database**
 
 
-Database can be be manipulated with multiple different calls from within the virtual environment:
+The database can only be manipulated with one command line action:
 
-    flask init_database
+    flask fill_database <file> <semesterName>
 
-will create a table called schedules, and replace an existing table with a new one.
-
-    flask fill_database <file>
-
-will fill the database with the data in the file.  An error is thrown if the file does not contain the correct data.  Currently using sample_data_2017.csv as a test file.
-
-    flask fetch_database <column-name>
-
-will print all the data in the requested column.  The options are: 
-
-- crn
-- course_id
-- component_id 
-- start_date
-- end_date
-- day
-- start_time
-- duration
-- pattern_day
-- pattern_start_time
-- pattern_duration
-- building_id
-- room_number
-- professor
-
-These replace the \<column-name> in the above call.
-
-    flask destroy_database
-
-will remove the schedules table from the database.
+will fill the database with the data in the file.  An error is thrown if the file does not contain the correct data.  This works the same as the admin page but is easier to debug with than the page.
