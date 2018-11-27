@@ -265,3 +265,25 @@ a.article:hover {
     padding: 10px;
 }
 
+.btn-outline-dark-alt {
+  color: #fff;
+  background-color: #3B534D;
+  background-image: none;
+  border-color: #3B534D;
+}
+
+.btn-outline-dark-alt:hover {
+  color: #3B534D;
+  background-color: #fff;
+  border-color: #3B534D;
+}
+
+.btn-outline-dark-alt:focus, .btn-outline-dark-alt.focus {
+  box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
+}
+
+.btn-outline-dark-alt.disabled, .btn-outline-dark-alt:disabled {
+  color: #3B534D;
+  background-color: transparent;
+}
+
