@@ -92,8 +92,14 @@ def fill_db(semester, file):
     conn = sqlite3.connect('instance/skemaDB.sqlite')
     df.to_sql(semester, conn, if_exists='replace')
     conn.commit()
+    event = semester + ' table added to database'
+    log.add_event(event)
     print('database updated!')
 
+
+'''
+Returns a list of all the events in a requested semester
+'''
 
 
 def get_events(semester):
@@ -102,7 +108,14 @@ def get_events(semester):
     statement = 'SELECT * FROM ' + semester
     data = cursor.execute(statement).fetchall()
     classes = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
+    event = 'All classes returned from table: ' + semester
+    log.add_event(event)
     return str(json.dumps(({'classes': classes})))
+
+
+'''
+Returns a list of all classes from a semester taught by a professor and/or in a specific subject
+'''
 
 
 def get_classes(semester, subject, prof, years):
@@ -159,7 +172,14 @@ def get_classes(semester, subject, prof, years):
                     + '%\' AND Name LIKE \'' + prof + '\''
     data = cursor.execute(statement).fetchall()
     classes = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
+    event = 'Classes returned from table: ' + semester + ' professor = ' + prof + ' subject = ' + subject
+    log.add_event(event)
     return str(json.dumps(({'classes': classes})))
+
+
+'''
+Returns a list of all the professors in a given semester
+'''
 
 
 def get_profs(semester):
@@ -171,7 +191,14 @@ def get_profs(semester):
     for row in rows:
         if sum(1 for c in row[0] if c.isupper()) < 4 and row[0] != '' and row[0] != ', ':
             lst.append(row[0])
+    event = 'List of professors returned from table: ' + semester
+    log.add_event(event)
     return lst
+
+
+'''
+Returns a list of all the subjects in a given semester
+'''
 
 
 def get_subject(semester):
@@ -182,7 +209,14 @@ def get_subject(semester):
     lst = []
     for row in rows:
         lst.append(row[0])
+    event = 'List of subjects returned from table: ' + semester
+    log.add_event(event)
     return lst
+
+
+'''
+Returns a list of all the tables in the database
+'''
 
 
 def get_semesters():
@@ -192,6 +226,8 @@ def get_semesters():
     lst = []
     for row in rows:
         lst.append(row[0])
+    event = 'List of semesters returned from database'
+    log.add_event(event)
     return lst
 
 

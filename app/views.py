@@ -1,3 +1,8 @@
+'''
+These methods are all for creating new pages.  Each one creates a unique page at a different url.
+'''
+
+
 import os
 from flask import Blueprint, render_template, request, redirect, flash, url_for, make_response, session
 from werkzeug.utils import secure_filename
@@ -8,22 +13,30 @@ from . import auth
 views = Blueprint('views', __name__, template_folder='templates')
 
 
+'''
+Will being the user to the main Skema calendar page.  If there has not been any semester selected, 
+the user is redirected to the page where they can select a new semester.
+'''
+
+
 @views.route('/skema', methods=['GET'])
 def main_page():
-    if not session.keys().__contains__('semester') or session['semester'][0] is None or int(session['semester'][1]) > 1:
+    if not session.keys().__contains__('semester') or session['semester'] is None:
         return redirect(url_for('views.start'))
-    print(session['semester'])
-    session['semester'] = session['semester'][0], session['semester'][1] + 1
-    subjects = db.get_subject(session['semester'][0])
-    profs = db.get_profs(session['semester'][0])
-    current_semester = (session['semester'][0])
+    subjects = db.get_subject(session['semester'])
+    profs = db.get_profs(session['semester'])
+    current_semester = session['semester']
     return render_template('skema.html', subjects=subjects, profs=profs, semester=current_semester)
 
+
+'''
+Used to create a list of all the requested classes.  These classes are chosen by the user and 
+sent to the method via a javascript method.
+'''
 
 
 @views.route('/data', methods=['GET'])
 def return_data():
-    print(session)
     request_args = request.args
     years = []
     if 'level100' in request_args:
@@ -38,7 +51,13 @@ def return_data():
         years.append(5)
         years.append(6)
         years.append(7)
-    return db.get_classes(session['semester'][0], request_args['subject'], request_args['prof'], years)
+    return db.get_classes(session['semester'], request_args['subject'], request_args['prof'], years)
+
+
+'''
+Creates the page that enables admins to upload csvs for new semesters.  The names are 
+standardized via dropdowns that restrict the potential names.
+'''
 
 
 @views.route('/skema/admin', methods=['GET', 'POST'])
@@ -66,14 +85,17 @@ def upload():
     return render_template('upload.html')
 
 
+'''
+Creates the landing page that lets users pick which semester they would like to view when using the
+calendar
+'''
+
+
 @views.route('/skema/start', methods=['GET','POST'])
 def start():
     if request.method == 'POST':
-        toople = request.form.get('semester'), 0
-        session['semester'] = toople
-        print(session['semester'])
+        session['semester'] = request.form.get('semester')
         resp = make_response(redirect(url_for('views.main_page')))
         return resp
     semesters = db.get_semesters()
     return render_template('landing.html', semesters=semesters)
-
