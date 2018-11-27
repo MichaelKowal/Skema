@@ -25,7 +25,7 @@ def main_page():
         return redirect(url_for('views.start'))
     subjects = db.get_subject(session['semester'])
     profs = db.get_profs(session['semester'])
-    current_semester = session['semester'][0]
+    current_semester = session['semester']
     return render_template('skema.html', subjects=subjects, profs=profs, semester=current_semester)
 
 

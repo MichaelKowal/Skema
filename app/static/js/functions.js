@@ -100,6 +100,7 @@ function getAvailableColor(){
 
 function removeAllEvents(){
     $calendar.fullCalendar('removeEvents');
+    courseIdsInCalendar = [];
     document.getElementById("courseList").innerHTML = "";
 }
 
