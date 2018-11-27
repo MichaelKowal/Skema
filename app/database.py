@@ -48,38 +48,47 @@ def fill_db(semester, file):
         log.add_event(str(e))
         print(str(e))
         exit()
-    df.columns = ['title', 'component_id', 'start_date', 'end_date', 'day',
-                  'start_time', 'duration', 'pattern_day', 'pattern_start_time',
-                  'pattern_duration', 'building_id', 'room_number', 'professor']
     df.index.name = 'crn'
     df = df.dropna(thresh=8)
     df = df.fillna('')
-    df['day'] = df[['day', 'pattern_day']].apply(lambda x: ''.join(x.map(str)), axis=1)
     lst = []
+    if df.columns.contains('Pattern Day'):
+        df['Day'] = df[['Day', 'Pattern Day']].apply(lambda x: ''.join(x.map(str)), axis=1)
+        df['Start Time'] = df[['Start Time', 'Pattern Start Time']].apply(lambda x: ''.join(x.map(str)), axis=1)
+        df['Duration'] = df[['Duration', 'Pattern Duration']].apply(lambda x: ''.join(x.map(str)), axis=1)
+        df = df.drop(['Pattern Day', 'Pattern Start Time', 'Pattern Duration'], axis=1)
     for index, row in df.iterrows():
-        if str(row['day']) == 'Monday':
+        if str(row['Day']) == 'Monday':
             lst.append('2018-01-01')
-        if str(row['day']) == 'Tuesday':
+        if str(row['Day']) == 'Tuesday':
             lst.append('2018-01-02')
-        if str(row['day']) == 'Wednesday':
+        if str(row['Day']) == 'Wednesday':
             lst.append('2018-01-03')
-        if str(row['day']) == 'Thursday':
+        if str(row['Day']) == 'Thursday':
             lst.append('2018-01-04')
-        if str(row['day']) == 'Friday':
+        if str(row['Day']) == 'Friday':
             lst.append('2018-01-05')
-        if str(row['day']) == 'Saturday':
+        if str(row['Day']) == 'Saturday':
             lst.append('2018-01-06')
-        if str(row['day']) == 'Sunday':
+        if str(row['Day']) == 'Sunday':
             lst.append('2018-01-07')
     df['date'] = lst
-    df['start_time'] = df[['start_time', 'pattern_start_time']].apply(lambda x: ''.join(x.map(str)), axis=1) + ':00'
-    df['duration'] = df[['duration', 'pattern_duration']].apply(lambda x: ''.join(x.map(str)), axis=1) + ':00'
-    df['start'] = df[['date', 'start_time']].apply(lambda x: 'T'.join(x.map(str)), axis=1)
-    df['end'] = pandas.to_datetime(df['start_time']) + pandas.to_timedelta(df['duration'])
+    if df.columns.contains('Name'):
+        df['Name'] = df[['Surname', 'Name']].apply(lambda x: ', '.join(x.map(str)), axis=1)
+    else:
+        df['Name'] = df['Surname']
+    df['start'] = df[['Start Time']] + ':00'
+    df['Duration'] = df[['Duration']] + ':00'
+    df['start'] = df[['date', 'Start Time']].apply(lambda x: 'T'.join(x.map(str)), axis=1)
+    df['end'] = pandas.to_datetime(df['start']) + pandas.to_timedelta(df['Duration'])
     df['end'] = df['end'].dt.time
     df['end'] = df[['date', 'end']].apply(lambda x: 'T'.join(x.map(str)), axis=1)
-    df = df.drop(['start_date', 'end_date', 'day', 'start_time', 'duration','pattern_day', 'pattern_start_time',
-                  'pattern_duration', 'building_id', 'date', ], 1)
+    df['title'] = df['Course ID']
+    df['component_id'] = df['Comp']
+    df = df.drop(['Start Date', 'End Date', 'Day', 'Start Time', 'Duration', 'Building ID', 'date', 'Course ID', 'Comp',
+                  'Surname'],axis=1)
+    if df.columns.contains('Deliv'):
+        df = df.drop(['Term ID', 'Deliv'], axis=1)
     conn = sqlite3.connect('instance/skemaDB.sqlite')
     df.to_sql(semester, conn, if_exists='replace')
     conn.commit()
@@ -105,49 +114,49 @@ def get_classes(semester, subject, prof, years):
         prof = '%'
     if len(years) == 1:
         statement = 'SELECT * FROM ' + semester+ ' WHERE ' \
-                    'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\''
+                    'Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\''
     elif len(years) == 2:
         statement = 'SELECT * FROM ' + semester + ' WHERE ' \
-                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\''
+                        'Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\''
     elif len(years) == 3:
         statement = 'SELECT * FROM ' + semester + ' WHERE ' \
-                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\''
+                        'Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\''
     elif len(years) == 4:
         statement = 'SELECT * FROM ' + semester + ' WHERE ' \
-                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\''
+                        'Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\''
     elif len(years) == 4:
         statement = 'SELECT * FROM ' + semester + ' WHERE ' \
-                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\''
+                        'Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\''
     elif len(years) == 4:
         statement = 'SELECT * FROM ' + semester + ' WHERE ' \
-                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\''
+                        'Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\''
     elif len(years) == 4:
         statement = 'SELECT * FROM ' + semester + ' WHERE ' \
-                        'professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\'' + \
-                    ' OR professor LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[6]) + '%\''
+                        'Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[0]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[1]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[2]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[3]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[4]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[5]) + '%\'' + \
+                    ' OR Name LIKE \'' + prof + '\' AND title LIKE \'' + subject + str(years[6]) + '%\''
     else:
         statement = 'SELECT * FROM ' + semester + ' WHERE title LIKE \'' + subject \
-                    + '%\' AND professor LIKE \'' + prof + '\''
+                    + '%\' AND Name LIKE \'' + prof + '\''
     data = cursor.execute(statement).fetchall()
     classes = [dict(zip([key[0] for key in cursor.description], row)) for row in data]
     return str(json.dumps(({'classes': classes})))
@@ -156,11 +165,11 @@ def get_classes(semester, subject, prof, years):
 def get_profs(semester):
     db = get_db()
     cursor = db.cursor()
-    statement = 'SELECT DISTINCT professor FROM ' + semester + ' ORDER BY professor'
+    statement = 'SELECT DISTINCT Name FROM ' + semester + ' ORDER BY Name'
     rows = cursor.execute(statement).fetchall()
     lst = []
     for row in rows:
-        if sum(1 for c in row[0] if c.isupper()) < 4 and row[0] != '':
+        if sum(1 for c in row[0] if c.isupper()) < 4 and row[0] != '' and row[0] != ', ':
             lst.append(row[0])
     return lst
 
